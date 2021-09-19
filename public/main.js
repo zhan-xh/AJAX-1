@@ -26,21 +26,22 @@ getHTML.onclick = () => {
 };
 
 getCSS.onclick = () => {
-    const request = new XMLHttpRequest();
-    request.open("GET", "./style.css");
-    request.onload = () => {
-        // console.log('请求成功了')
-        // console.log('request.response')
-        console.log(request.response)
-        //创建style标签
-        const style = document.createElement('style')
-        //填写style标签内容
-        style.innerHTML = request.response
-        //把标签插入到head中
-        document.head.appendChild(style)
-    };
-    request.onerror = () => {
-        console.log('请求失败了')
-    };
-    request.send();
+    const request = new XMLHttpRequest(); //readystate =0
+    request.open("GET", "./style.css"); //readystate =1
+    request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+            console.log('下载完成了')
+            //下载完成但是不知道加载成功还是失败
+            if (request.status >= 200 && request.status < 300) {
+                const style = document.createElement('style')
+                //填写style标签内容
+                style.innerHTML = request.response
+                //把标签插入到head中
+                document.head.appendChild(style)
+            } else {
+                alert('加载CSS失败!')
+            }
+        }
+    }
+    request.send(); //readystate =2
 };
